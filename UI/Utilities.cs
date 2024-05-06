@@ -7,7 +7,7 @@ namespace Console_EmployeeManagement.UI
         public void WyswietlPracownikow()
         {
             Console.Clear();
-            Console.WriteLine("Wszyscy pracownicy:");
+            Console.WriteLine("Wszyscy pracownicy: \n");
 
             DatabaseManagament db = new DatabaseManagament();
 
@@ -18,7 +18,7 @@ namespace Console_EmployeeManagement.UI
         public void WyswietlPracownika()
         { 
             Console.Clear();
-            Console.WriteLine("Podaj id pracownika: ");
+            Console.WriteLine("Podaj id pracownika: \n");
 
             DatabaseManagament db = new DatabaseManagament();
 
@@ -28,10 +28,15 @@ namespace Console_EmployeeManagement.UI
             Console.ReadKey(); // Dopoki nie nacisniesz klawisza program nie wyjdzie z metody
         }
 
-        public void TymczasowaMetoda()
+        public void WyswietlStanowiska()
         {
-            Console.WriteLine("Tymczasowa metoda");
-            Console.ReadKey();
+            Console.Clear();
+            Console.WriteLine("Stanowiska + liczba osob ktore na nich pracuje:\n");
+
+            DatabaseManagament db = new DatabaseManagament();
+
+            db.WyswietlStanowiska();
+            Console.ReadKey(); // Dopoki nie nacisniesz klawisza program nie wyjdzie z metody
         }
     }
 }

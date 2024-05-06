@@ -91,7 +91,7 @@ namespace Console_EmployeeManagement.DB_Managament
                     worker.HireDate = Convert.ToDateTime(reader["hire_date"]);
                     worker.IsWorking = Convert.ToInt16(reader["is_working"]); // tiny int
 
-                    lista_pracownikow.Add(worker);
+                    lista_pracownikow.Add(worker); 
                 }
 
                 conn.Close();
@@ -117,6 +117,26 @@ namespace Console_EmployeeManagement.DB_Managament
             {
                 Console.WriteLine("Nie ma pracownika o podanym ID.");
             }
+        }
+
+        public void WyswietlStanowiska()
+        {
+            // Wyswietlenie stanowisk + ile osob pracuje na danym stanowisku
+            string query = "SELECT roles.role_name, COUNT(workers.id_role) as ilosc_pracownikow " +
+                "FROM roles " +
+                "LEFT JOIN workers ON roles.id_role = workers.id_role " +
+                "GROUP BY roles.role_name";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+
+            conn.Open();
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Console.WriteLine(reader["role_name"] + " - " + reader["ilosc_pracownikow"]);
+            }
+
+            conn.Close();
         }
     }
 }
