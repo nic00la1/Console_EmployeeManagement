@@ -1,11 +1,13 @@
 ﻿using Console_EmployeeManagement.Models;
 using ConsoleTables;
+using Google.Protobuf.WellKnownTypes;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Mysqlx.Expect.Open.Types;
 
 namespace Console_EmployeeManagement.DB_Managament
 {
@@ -37,7 +39,7 @@ namespace Console_EmployeeManagement.DB_Managament
             while(reader.Read())
             {
                 Worker worker = new Worker();
-                worker.Id = Convert.ToInt32(reader["id"]);
+                worker.Id = Convert.ToInt32(reader["id_worker"]);
                 worker.Name = reader["name"].ToString();
                 worker.Surname = reader["surname"].ToString();
                 worker.Age = Convert.ToInt32(reader["age"]);
@@ -53,11 +55,15 @@ namespace Console_EmployeeManagement.DB_Managament
             //  Uzywam paczke z NugetPackage - ,,ConsoleTables"
             var table = new ConsoleTable("Id", "Imie",
                 "Nazwisko", "Stanowisko");
-
             foreach (Worker worker in lista_pracownikow)
             {
+                var stanowisko = worker.IdRole == 1 ? "Admin" 
+                    : (worker.IdRole == 2 ? "Rekruter" 
+                    : ( worker.IdRole == 3 ? "Programista" 
+                    : "Dzial HR"));
+
                 table.AddRow(worker.Id, worker.Name,
-                    worker.Surname, worker.IdRole);
+                worker.Surname, stanowisko);
             }
 
             table.Options.EnableCount = false; // Wylaczenie numeracji wierszy
