@@ -8,7 +8,7 @@ namespace Console_EmployeeManagement.Models
 {
     public class Worker
     {
-        public int IdWorker { get;set; }
+        public int Id { get;set; }
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public string? Login { get; set; }

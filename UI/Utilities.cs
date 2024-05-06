@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Console_EmployeeManagement.DB_Managament;
 
 namespace Console_EmployeeManagement.UI
 {
@@ -13,7 +9,7 @@ namespace Console_EmployeeManagement.UI
             Console.Clear();
             Console.WriteLine("Wszyscy pracownicy:");
 
-            DatabaseManagement db = new DatabaseManagement();
+            DatabaseManagament db = new DatabaseManagament();
 
             db.WyswietlPracownikow();
             Console.ReadKey(); // Dopoki nie nacisniesz klawisza program nie wyjdzie z metody

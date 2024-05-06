@@ -12,7 +12,7 @@ namespace Console_EmployeeManagement.UI
         static string[] positions =
           {
                 "1. Wyswietl pracownikow",
-                "2. Wyswietl 1 pracownika",
+                "2. Tymczasowa metoda",
                 "3. Koniec"
           };
         static int activePosition = 0;
