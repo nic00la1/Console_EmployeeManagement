@@ -69,5 +69,47 @@ namespace Console_EmployeeManagement.DB_Managament
             table.Options.EnableCount = false; // Wylaczenie numeracji wierszy
             table.Write(); // Wyswietla tabele 
         }
+
+        public void WyswietlPracownika(int id)
+        {
+            string query = $"SELECT * FROM workers WHERE id_worker = {id}";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+
+            conn.Open();
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Worker worker = new Worker();
+                worker.Id = Convert.ToInt32(reader["id_worker"]);
+                worker.Name = reader["name"].ToString();
+                worker.Surname = reader["surname"].ToString();
+                worker.Age = Convert.ToInt32(reader["age"]);
+                worker.IdRole = Convert.ToInt32(reader["id_role"]);
+                worker.HireDate = Convert.ToDateTime(reader["hire_date"]);
+                worker.IsWorking = Convert.ToInt16(reader["is_working"]); // tiny int
+
+                lista_pracownikow.Add(worker);
+            }
+
+            conn.Close();
+
+            //  Uzywam paczke z NugetPackage - ,,ConsoleTables"
+            var table = new ConsoleTable("Id", "Imie",
+                               "Nazwisko", "Stanowisko");
+            foreach (Worker worker in lista_pracownikow)
+            {
+                var stanowisko = worker.IdRole == 1 ? "Admin"
+                    : (worker.IdRole == 2 ? "Rekruter"
+                    : (worker.IdRole == 3 ? "Programista"
+                    : "Dzial HR"));
+
+                table.AddRow(worker.Id, worker.Name,
+                                   worker.Surname, stanowisko);
+            }
+
+            table.Options.EnableCount = false; // Wylaczenie numeracji wierszy
+            table.Write(); // Wyswietla tabele 
+        }
     }
 }

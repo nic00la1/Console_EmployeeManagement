@@ -12,8 +12,9 @@ namespace Console_EmployeeManagement.UI
         static string[] positions =
           {
                 "1. Wyswietl pracownikow",
-                "2. Tymczasowa metoda",
-                "3. Koniec"
+                "2. Wyswietl pracownika",
+                "3. Tymczasowa metoda",
+                "4. Koniec"
           };
         static int activePosition = 0;
 
@@ -90,15 +91,12 @@ namespace Console_EmployeeManagement.UI
                     utilities.WyswietlPracownikow();
                     break;
                 case 1:
-                    utilities.TymczasowaMetoda();
+                    utilities.WyswietlPracownika();
                     break;
                 case 2:
                     utilities.TymczasowaMetoda();
                     break;
                 case 3:
-                    utilities.TymczasowaMetoda();
-                    break;
-                case 4:
                     Environment.Exit(0);
                     break;
             }
