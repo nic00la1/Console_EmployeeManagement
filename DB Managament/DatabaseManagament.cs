@@ -138,5 +138,31 @@ namespace Console_EmployeeManagement.DB_Managament
 
             conn.Close();
         }
+
+        public void DodajPracownika(Worker worker)
+        {
+            Console.WriteLine("Podaj imie: ");
+            worker.Name = Console.ReadLine();
+            Console.WriteLine("Podaj nazwisko: ");
+            worker.Surname = Console.ReadLine();
+            Console.WriteLine("Podaj wiek: ");
+            worker.Age = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Podaj id stanowiska: ");
+            worker.IdRole = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Podaj date zatrudnienia: ");
+            worker.HireDate = Convert.ToDateTime(Console.ReadLine());
+            Console.WriteLine("Czy pracownik jest zatrudniony? (1 - tak, 0 - nie): ");
+            worker.IsWorking = Convert.ToInt16(Console.ReadLine());
+
+            string query = $"INSERT INTO workers (name, surname, age, id_role, hire_date, is_working) " +
+                $"VALUES ('{worker.Name}', '{worker.Surname}', {worker.Age}, {worker.IdRole}, '{worker.HireDate}', {worker.IsWorking})";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+
+            Console.WriteLine("Dodano nowego pracownika.");
+        }
     }
 }

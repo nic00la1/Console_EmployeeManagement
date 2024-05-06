@@ -14,7 +14,8 @@ namespace Console_EmployeeManagement.UI
                 "1. Wyswietl pracownikow",
                 "2. Wyswietl pracownika",
                 "3. Wyswietl stanowiska",
-                "4. Koniec"
+                "4. Dodaj pracownika",
+                "5. Koniec"
           };
         static int activePosition = 0;
 
@@ -97,6 +98,9 @@ namespace Console_EmployeeManagement.UI
                     utilities.WyswietlStanowiska();
                     break;
                 case 3:
+                    utilities.DodajPracownika();
+                    break;
+                case 4:
                     Environment.Exit(0);
                     break;
             }

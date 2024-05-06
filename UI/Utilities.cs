@@ -1,4 +1,5 @@
 ﻿using Console_EmployeeManagement.DB_Managament;
+using Console_EmployeeManagement.Models;
 
 namespace Console_EmployeeManagement.UI
 {
@@ -36,6 +37,18 @@ namespace Console_EmployeeManagement.UI
             DatabaseManagament db = new DatabaseManagament();
 
             db.WyswietlStanowiska();
+            Console.ReadKey(); // Dopoki nie nacisniesz klawisza program nie wyjdzie z metody
+        }
+
+        public void DodajPracownika()
+        {
+            Console.Clear();
+            Console.WriteLine("Dodaj nowego pracownika: \n");
+
+            DatabaseManagament db = new DatabaseManagament();
+            Worker worker = new Worker();
+
+            db.DodajPracownika(worker);
             Console.ReadKey(); // Dopoki nie nacisniesz klawisza program nie wyjdzie z metody
         }
     }
