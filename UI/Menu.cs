@@ -16,7 +16,8 @@ namespace Console_EmployeeManagement.UI
                 "3. Wyswietl stanowiska",
                 "4. Dodaj pracownika",
                 "5. Usun pracownika",
-                "6. Koniec"
+                "6. Aktualizuj haslo pracownika",
+                "7. Koniec"
           };
         static int activePosition = 0;
 
@@ -105,6 +106,9 @@ namespace Console_EmployeeManagement.UI
                     utilities.UsunPracownika();
                     break;
                 case 5:
+                    utilities.AktualizujHasloPracownika();
+                    break;
+                case 6:
                     Environment.Exit(0);
                     break;
             }

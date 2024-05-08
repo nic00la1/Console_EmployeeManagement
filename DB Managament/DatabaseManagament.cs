@@ -1,4 +1,5 @@
-﻿using Console_EmployeeManagement.Models;
+﻿using System.Text;
+using Console_EmployeeManagement.Models;
 using ConsoleTables;
 using MySql.Data.MySqlClient;
 
@@ -37,9 +38,6 @@ namespace Console_EmployeeManagement.DB_Managament
                 worker.Surname = reader["surname"].ToString();
                 worker.Age = Convert.ToInt32(reader["age"]);
                 worker.IdRole = Convert.ToInt32(reader["id_role"]);
-                worker.HireDate = Convert.ToDateTime(reader["hire_date"]);
-                worker.IsWorking = Convert.ToInt16(reader["is_working"]); // tiny int
-                worker.Login = reader["login"].ToString();
 
                 ListaPracownikow.Add(worker);
             }
@@ -55,8 +53,7 @@ namespace Console_EmployeeManagement.DB_Managament
             
             //  Uzywam paczke z NugetPackage - ,,ConsoleTables"
             var table = new ConsoleTable("Id", "Imie",
-                "Nazwisko", "Wiek", "Stanowisko", 
-                "Login" , "Data Zatrudnienia");
+                "Nazwisko", "Stanowisko");
             foreach (Worker worker in ListaPracownikow)
             {
                 var stanowisko = worker.IdRole == 1 ? "Admin" 
@@ -65,8 +62,8 @@ namespace Console_EmployeeManagement.DB_Managament
                     : "Dzial HR"));
 
                 table.AddRow(worker.Id, worker.Name,
-                worker.Surname, worker.Age ,stanowisko,
-                worker.Login, worker.HireDate);
+                worker.Surname
+                ,stanowisko);
             }
 
             table.Options.EnableCount = false; // Wylaczenie numeracji wierszy
@@ -210,6 +207,63 @@ namespace Console_EmployeeManagement.DB_Managament
             
             
             _conn.Close();
+        }
+        
+        // Opcja aktualizacji hasla pracownika,
+        // ktore jest generowane automatycznie przez system
+        public void AktualizujHasloUsera(int id)
+        {
+            // Generate a new password
+            string newPassword = GenerujHaslo();
+
+            string query = $"UPDATE workers SET password = '{newPassword}' WHERE id_worker = {id}";
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
+
+            _conn.Open();
+            int affectedRows = cmd.ExecuteNonQuery();
+            if (affectedRows == 0)
+            {
+                Console.WriteLine("Nie ma pracownika o podanym ID.");
+            }
+            else
+            {
+                Console.WriteLine($"\nNowe haslo: {newPassword} --> |WERSJA TESTOWA|\n");
+                
+                Console.WriteLine($"Zaktualizowano haslo pracownika o id {id}.");
+            }
+
+            _conn.Close();
+        }
+        
+        private string GenerujHaslo()
+        {
+            // Generuj losowe haslo w przedziale od 8 do 30 znakow 
+            Random rnd = new Random();
+            int length = rnd.Next(9, 31);
+            
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            const string specialChars = "!@#$%^&*()";
+            StringBuilder res = new StringBuilder();
+            
+            // Generuj losowe znaki alfanumeryczne ( czyli litery i cyfry) 
+            while (0 < length--)
+            {
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
+            
+            // Generuj losowe znaki specjalne i wstaw je w losowe miejsca
+            int pos1 = rnd.Next(0, res.Length);
+            int pos2;
+            do
+            {
+                pos2 = rnd.Next(0, res.Length);
+            } while (pos2 == pos1); // Upewnij sie, ze oba znaki nie sa na tych samych pozycjach
+
+            // Znaki specjalne
+            res.Insert(pos1, specialChars[rnd.Next(specialChars.Length)]);
+            res.Insert(pos2, specialChars[rnd.Next(specialChars.Length)]);
+
+            return res.ToString();
         }
     }
 }

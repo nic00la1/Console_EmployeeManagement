@@ -64,5 +64,26 @@ namespace Console_EmployeeManagement.UI
             db.UsunPracownika(id);
             Console.ReadKey(); // Dopoki nie nacisniesz klawisza program nie wyjdzie z metody
         }
+
+        public void AktualizujHasloPracownika()
+        {
+         Console.Clear();
+         Console.WriteLine("Aktualizuj haslo pracownika: \n");
+         
+         DatabaseManagament db = new DatabaseManagament();
+         
+         Console.WriteLine("Podaj id pracownika: ");
+         string input = Console.ReadLine();
+         int id;
+         
+         if (!int.TryParse(input, out id))
+         {
+             Console.WriteLine("Invalid input. Please enter a valid ID.");
+             return;
+         }
+         
+         db.AktualizujHasloUsera(id);
+         Console.ReadKey();
+        }
     }
 }
