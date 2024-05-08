@@ -78,6 +78,7 @@ namespace Console_EmployeeManagement.DB_Managament
             _conn.Open();
             MySqlDataReader reader = cmd.ExecuteReader();
 
+            // Jesli pracownik o podanym ID istnieje
             if (reader.HasRows)
             {
                 while (reader.Read())
@@ -165,6 +166,29 @@ namespace Console_EmployeeManagement.DB_Managament
             _conn.Close();
 
             Console.WriteLine("Dodano nowego pracownika.");
+        }
+
+        public void UsunPracownika(int id)
+        {
+            string query = $"DELETE FROM workers WHERE id_worker = {id}";
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
+            
+            _conn.Open();
+            // Usun pracownika, gdy istnieje
+
+            if (cmd.ExecuteNonQuery() == 0)
+            {
+                Console.WriteLine("Nie ma pracownika o podanym ID.");
+                return;
+            }
+            else
+            {
+                cmd.ExecuteNonQuery();
+                Console.WriteLine($"Usunieto pracownika o id {id}.");
+            }
+            
+            
+            _conn.Close();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Console_EmployeeManagement.UI
         public void WyswietlPracownika()
         { 
             Console.Clear();
-            Console.WriteLine("Podaj id pracownika: \n");
+            Console.WriteLine("Podaj id pracownika, ktorego chcesz wyswietlic: \n");
 
             DatabaseManagament db = new DatabaseManagament();
 
@@ -49,6 +49,19 @@ namespace Console_EmployeeManagement.UI
             Worker worker = new Worker();
 
             db.DodajPracownika(worker);
+            Console.ReadKey(); // Dopoki nie nacisniesz klawisza program nie wyjdzie z metody
+        }
+
+        public void UsunPracownika()
+        {
+            Console.Clear();
+            Console.WriteLine("Podaj id pracownika, ktorego chcesz usunac: \n");
+
+            DatabaseManagament db = new DatabaseManagament();
+
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            db.UsunPracownika(id);
             Console.ReadKey(); // Dopoki nie nacisniesz klawisza program nie wyjdzie z metody
         }
     }
