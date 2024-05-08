@@ -323,5 +323,45 @@ namespace Console_EmployeeManagement.DB_Managament
             }
             _conn.Close();
         }
+
+        public void WyswietlNotatki(int id)
+        {
+            string query = $"SELECT * FROM note WHERE id_worker = {id}";
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
+            
+            _conn.Open();
+            MySqlDataReader reader = cmd.ExecuteReader();
+            
+            if (!reader.HasRows)
+            {
+                Console.WriteLine("Brak notatek dla pracownika o podanym ID.");
+                _conn.Close();
+                return;
+            }
+            
+            List<Note> notes = new List<Note>();
+            
+            while (reader.Read())
+            {
+                Note note = new Note();
+                note.IdNote = Convert.ToInt32(reader["id_note"]);
+                note.IdWorker = Convert.ToInt32(reader["id_worker"]);
+                note.Content = reader["content"].ToString();
+                note.AddedAt = Convert.ToDateTime(reader["added_at"]);
+                
+                notes.Add(note);
+            }
+            
+            _conn.Close();
+            
+            var table = new ConsoleTable("Id", "Id Pracownika", "Tresc", "Data Dodania");
+            foreach (Note note in notes)
+            {
+                table.AddRow(note.IdNote, note.IdWorker, note.Content, note.AddedAt);
+            }
+            
+            table.Options.EnableCount = false; // Wylaczenie numeracji wierszy
+            table.Write(); // Wyswietla tabele
+        }
     }
 }

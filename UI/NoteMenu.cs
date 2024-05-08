@@ -25,7 +25,7 @@ public class NoteMenu
     {
         Console.BackgroundColor = ConsoleColor.Black;
         Console.Clear();
-        Console.ForegroundColor = ConsoleColor.DarkCyan;
+        Console.ForegroundColor = ConsoleColor.DarkBlue;
         Console.WriteLine(">>> Menu Notatek: <<<");
         Console.WriteLine();
 
@@ -33,11 +33,11 @@ public class NoteMenu
         {
             if (i == activeNotePosition)
             {
-                Console.BackgroundColor = ConsoleColor.DarkCyan;
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.WriteLine("{0, -35}", notePositions[i]);
                 Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
             }
             else
             {
@@ -85,7 +85,7 @@ public class NoteMenu
                 utilities.UsunNotatke(); 
                 break;
             case 2:
-                // utilities.WyswietlNotatke(); // Dodaj tę metodę do klasy Utilities
+                 utilities.WyswietlNotatki(); 
                 break;
             case 3:
                 Menu.StartMenu();

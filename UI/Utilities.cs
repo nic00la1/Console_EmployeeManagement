@@ -110,5 +110,18 @@ namespace Console_EmployeeManagement.UI
             db.UsunNotatke(id);
             Console.ReadKey();
         }
+
+        public void WyswietlNotatki()
+        {
+            Console.Clear();
+            Console.WriteLine("Podaj id pracownika, ktorego notatki chcesz wyswietlic: \n");
+
+            int id = Convert.ToInt32(Console.ReadLine());
+            
+            DatabaseManagament db = new DatabaseManagament();
+            
+            db.WyswietlNotatki(id);
+            Console.ReadKey();
+        }
     }
 }
