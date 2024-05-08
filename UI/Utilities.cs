@@ -85,5 +85,17 @@ namespace Console_EmployeeManagement.UI
          db.AktualizujHasloUsera(id);
          Console.ReadKey();
         }
+
+        public void DodajNotatke()
+        {
+            Console.Clear();
+            Console.WriteLine("Dodaj notatke: \n");
+            
+            DatabaseManagament db = new DatabaseManagament();
+            Note note = new Note();
+            
+            db.DodajNotatke(note);
+            Console.ReadKey();
+        }
     }
 }

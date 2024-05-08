@@ -265,5 +265,34 @@ namespace Console_EmployeeManagement.DB_Managament
 
             return res.ToString();
         }
+        
+        // === NOTATKI PRACOWNIKA === - opcja dodatkowa
+        public void DodajNotatke(Note note)
+        {
+            Console.WriteLine("Podaj id pracownika: ");
+            note.IdWorker = Convert.ToInt32(Console.ReadLine());
+
+            // Jesli podane id pracownika nie istnieje
+            if (!ListaPracownikow.Any(x => x.Id == note.IdWorker))
+            {
+                Console.WriteLine("Nie ma pracownika o podanym ID.");
+                return;
+            }
+            
+            Console.WriteLine("Podaj tresc notatki: ");
+            note.Content = Console.ReadLine();
+            note.AddedAt = DateTime.Now;
+            string addedAd = note.AddedAt.ToString("yyyy-MM-dd HH:mm:ss");
+            
+            string query = $"INSERT INTO note (id_worker, content, added_at) " +
+                           $"VALUES ({note.IdWorker}, '{note.Content}', '{addedAd}')";
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
+
+            _conn.Open();
+            cmd.ExecuteNonQuery();
+            _conn.Close();
+
+            Console.WriteLine("Dodano notatke.");
+        }
     }
 }

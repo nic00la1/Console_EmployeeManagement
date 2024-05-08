@@ -17,6 +17,7 @@ namespace Console_EmployeeManagement.UI
                 "4. Dodaj pracownika",
                 "5. Usun pracownika",
                 "6. Aktualizuj haslo pracownika",
+                "8. Notatki o danym pracowniku",
                 "7. Koniec"
           };
         static int activePosition = 0;
@@ -108,7 +109,10 @@ namespace Console_EmployeeManagement.UI
                 case 5:
                     utilities.AktualizujHasloPracownika();
                     break;
-                case 6:
+                case 6 :
+                    NoteMenu.StartNoteMenu();
+                    break;
+                case 7:
                     Environment.Exit(0);
                     break;
             }
