@@ -166,8 +166,8 @@ namespace Console_EmployeeManagement.DB_Managament
             Console.WriteLine("Podaj id stanowiska: ");
             worker.IdRole = Convert.ToInt32(Console.ReadLine());
             
-            // data zatrudnienia - pobiera terazniejsza date
-            worker.HireDate = DateTime.Now;
+            Console.WriteLine("Podaj date zatrudnienia (yyyy-MM-dd HH:mm:ss): ");
+            worker.HireDate = Convert.ToDateTime(Console.ReadLine());
             string hireDate = worker.HireDate.ToString("yyyy-MM-dd HH:mm:ss");
             
             worker.IsWorking = Convert.ToInt16(true);
