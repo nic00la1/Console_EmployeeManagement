@@ -272,12 +272,23 @@ namespace Console_EmployeeManagement.DB_Managament
             Console.WriteLine("Podaj id pracownika: ");
             note.IdWorker = Convert.ToInt32(Console.ReadLine());
 
-            // Jesli podane id pracownika nie istnieje
-            if (!ListaPracownikow.Any(x => x.Id == note.IdWorker))
+          string queryTest = $"SELECT * FROM workers WHERE id_worker = {note.IdWorker}";  
+            MySqlCommand cmdTest = new MySqlCommand(queryTest, _conn);
+            _conn.Open();
+            
+            MySqlDataReader reader = cmdTest.ExecuteReader();
+            
+            if (!reader.HasRows)
             {
                 Console.WriteLine("Nie ma pracownika o podanym ID.");
+                _conn.Close();
                 return;
             }
+            
+            _conn.Close();
+            
+            
+          
             
             Console.WriteLine("Podaj tresc notatki: ");
             note.Content = Console.ReadLine();
@@ -292,7 +303,7 @@ namespace Console_EmployeeManagement.DB_Managament
             cmd.ExecuteNonQuery();
             _conn.Close();
 
-            Console.WriteLine("Dodano notatke.");
+            Console.WriteLine("\nDodano notatke!");
         }
     }
 }
