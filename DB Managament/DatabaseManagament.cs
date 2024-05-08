@@ -39,6 +39,7 @@ namespace Console_EmployeeManagement.DB_Managament
                 worker.IdRole = Convert.ToInt32(reader["id_role"]);
                 worker.HireDate = Convert.ToDateTime(reader["hire_date"]);
                 worker.IsWorking = Convert.ToInt16(reader["is_working"]); // tiny int
+                worker.Login = reader["login"].ToString();
 
                 ListaPracownikow.Add(worker);
             }
@@ -54,7 +55,8 @@ namespace Console_EmployeeManagement.DB_Managament
             
             //  Uzywam paczke z NugetPackage - ,,ConsoleTables"
             var table = new ConsoleTable("Id", "Imie",
-                "Nazwisko", "Stanowisko");
+                "Nazwisko", "Wiek", "Stanowisko", 
+                "Login" , "Data Zatrudnienia");
             foreach (Worker worker in ListaPracownikow)
             {
                 var stanowisko = worker.IdRole == 1 ? "Admin" 
@@ -63,7 +65,8 @@ namespace Console_EmployeeManagement.DB_Managament
                     : "Dzial HR"));
 
                 table.AddRow(worker.Id, worker.Name,
-                worker.Surname, stanowisko);
+                worker.Surname, worker.Age ,stanowisko,
+                worker.Login, worker.HireDate);
             }
 
             table.Options.EnableCount = false; // Wylaczenie numeracji wierszy
@@ -91,6 +94,7 @@ namespace Console_EmployeeManagement.DB_Managament
                     worker.IdRole = Convert.ToInt32(reader["id_role"]);
                     worker.HireDate = Convert.ToDateTime(reader["hire_date"]);
                     worker.IsWorking = Convert.ToInt16(reader["is_working"]); // tiny int
+                    worker.Login = reader["login"].ToString();
 
                     ListaPracownikow.Add(worker); 
                 }
@@ -99,7 +103,8 @@ namespace Console_EmployeeManagement.DB_Managament
 
                 //  Uzywam paczke z NugetPackage - ,,ConsoleTables"
                 var table = new ConsoleTable("Id", "Imie",
-                                   "Nazwisko", "Stanowisko");
+                    "Nazwisko", "Wiek", "Stanowisko", 
+                    "Login" , "Data Zatrudnienia");
                 foreach (Worker worker in ListaPracownikow)
                 {
                     var stanowisko = worker.IdRole == 1 ? "Admin"
@@ -108,7 +113,8 @@ namespace Console_EmployeeManagement.DB_Managament
                         : "Dzial HR"));
 
                     table.AddRow(worker.Id, worker.Name,
-                                       worker.Surname, stanowisko);
+                        worker.Surname, worker.Age ,stanowisko,
+                        worker.Login, worker.HireDate);
                 }
 
                 table.Options.EnableCount = false; // Wylaczenie numeracji wierszy
@@ -142,23 +148,38 @@ namespace Console_EmployeeManagement.DB_Managament
 
         public void DodajPracownika(Worker worker)
         {
-            Console.WriteLine("Podaj imie: ");
-            worker.Name = Console.ReadLine();
-            Console.WriteLine("Podaj nazwisko: ");
-            worker.Surname = Console.ReadLine();
+            Console.WriteLine("Podaj imie (max 24 znaki): ");
+            string nameInput = Console.ReadLine();
+            worker.Name = nameInput.Substring(0, Math.Min(24, nameInput.Length));
+            
+            Console.WriteLine("Podaj nazwisko (max 80 znakow): ");
+            string surnameInput = Console.ReadLine();
+            worker.Surname = surnameInput.Substring(0, Math.Min(80, surnameInput.Length));
+            
+            Console.WriteLine("Podaj login (max 16 znakow): ");
+            string loginInput = Console.ReadLine();
+            worker.Login = loginInput.Substring(0, Math.Min(16, loginInput.Length));
+            
+            Console.WriteLine("Podaj haslo (max 30 znakow): ");
+            string passwordInput = Console.ReadLine();
+            worker.Password = passwordInput.Substring(0, Math.Min(30, passwordInput.Length));
+            
             Console.WriteLine("Podaj wiek: ");
             worker.Age = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Podaj id stanowiska: ");
             worker.IdRole = Convert.ToInt32(Console.ReadLine());
             
-            // data zatrudnienia
+            // data zatrudnienia - pobiera terazniejsza date
             worker.HireDate = DateTime.Now;
             string hireDate = worker.HireDate.ToString("yyyy-MM-dd HH:mm:ss");
             
             worker.IsWorking = Convert.ToInt16(true);
 
-            string query = $"INSERT INTO workers (name, surname, age, id_role, hire_date, is_working) " +
-                $"VALUES ('{worker.Name}', '{worker.Surname}', {worker.Age}, {worker.IdRole}, '{hireDate}', {worker.IsWorking})";
+            string query = $"INSERT INTO workers " +
+                           $"(name, surname, login, password, age, id_role, hire_date, is_working) " +
+                           $"VALUES ('{worker.Name}', '{worker.Surname}', '{worker.Login}'" +
+                           $", '{worker.Password}', {worker.Age}, {worker.IdRole}," +
+                           $" '{hireDate}', {worker.IsWorking})";
             MySqlCommand cmd = new MySqlCommand(query, _conn);
 
             _conn.Open();
