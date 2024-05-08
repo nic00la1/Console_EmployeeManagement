@@ -97,5 +97,18 @@ namespace Console_EmployeeManagement.UI
             db.DodajNotatke(note);
             Console.ReadKey();
         }
+        
+        public void UsunNotatke()
+        {
+            Console.Clear();
+            Console.WriteLine("Podaj id notatki, ktora chcesz usunac: \n");
+            
+            DatabaseManagament db = new DatabaseManagament();
+            
+            int id = Convert.ToInt32(Console.ReadLine());
+            
+            db.UsunNotatke(id);
+            Console.ReadKey();
+        }
     }
 }

@@ -287,9 +287,6 @@ namespace Console_EmployeeManagement.DB_Managament
             
             _conn.Close();
             
-            
-          
-            
             Console.WriteLine("Podaj tresc notatki: ");
             note.Content = Console.ReadLine();
             note.AddedAt = DateTime.Now;
@@ -304,6 +301,27 @@ namespace Console_EmployeeManagement.DB_Managament
             _conn.Close();
 
             Console.WriteLine("\nDodano notatke!");
+        }
+        
+        public void UsunNotatke(int id)
+        {
+            string query = $"DELETE FROM note WHERE id_note = {id}";
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
+            
+            _conn.Open();
+            // Usun notatke, gdy istnieje
+
+            if (cmd.ExecuteNonQuery() == 0)
+            {
+                Console.WriteLine("Nie ma notatki o podanym ID.");
+                return;
+            }
+            else
+            {
+                cmd.ExecuteNonQuery();
+                Console.WriteLine($"Usunieto notatke o id {id}.");
+            }
+            _conn.Close();
         }
     }
 }

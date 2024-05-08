@@ -82,7 +82,7 @@ public class NoteMenu
                 utilities.DodajNotatke();
                 break;
             case 1:
-                // utilities.UsunNotatke(); // Dodaj tę metodę do klasy Utilities
+                utilities.UsunNotatke(); 
                 break;
             case 2:
                 // utilities.WyswietlNotatke(); // Dodaj tę metodę do klasy Utilities
