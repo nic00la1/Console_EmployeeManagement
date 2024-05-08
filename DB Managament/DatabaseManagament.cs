@@ -1,39 +1,32 @@
 ﻿using Console_EmployeeManagement.Models;
 using ConsoleTables;
-using Google.Protobuf.WellKnownTypes;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Mysqlx.Expect.Open.Types;
 
 namespace Console_EmployeeManagement.DB_Managament
 {
     public class DatabaseManagament
     {
-        public List<Worker> lista_pracownikow = new List<Worker>(); // Lista wszystkich pracownikow
+        public List<Worker> ListaPracownikow = new List<Worker>(); // Lista wszystkich pracownikow
 
-        string connectionString = 
+        string _connectionString = 
             $"server = {Properties.Resources.server};" +
            $"uid={Properties.Resources.uid};" +
             $"pwd={Properties.Resources.pwd};" +
             $"database={Properties.Resources.database}";
-        MySqlConnection conn;
+        MySqlConnection _conn;
 
         // Konstruktor
         public DatabaseManagament()
         {
-            conn = new MySqlConnection(connectionString);
+            _conn = new MySqlConnection(_connectionString);
         }
 
         public void WyswietlPracownikow()
         {
             string query = "SELECT * FROM workers";
-            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
 
-            conn.Open();
+            _conn.Open();
             MySqlDataReader reader = cmd.ExecuteReader();
 
             while(reader.Read())
@@ -47,15 +40,22 @@ namespace Console_EmployeeManagement.DB_Managament
                 worker.HireDate = Convert.ToDateTime(reader["hire_date"]);
                 worker.IsWorking = Convert.ToInt16(reader["is_working"]); // tiny int
 
-                lista_pracownikow.Add(worker);
+                ListaPracownikow.Add(worker);
             }
 
-            conn.Close();
+            _conn.Close();
 
+            // Jesli nie ma pracownikow w bazie 
+            if (ListaPracownikow.Count == 0)
+            {
+                Console.WriteLine("Brak pracownikow w bazie!");
+                return;
+            }
+            
             //  Uzywam paczke z NugetPackage - ,,ConsoleTables"
             var table = new ConsoleTable("Id", "Imie",
                 "Nazwisko", "Stanowisko");
-            foreach (Worker worker in lista_pracownikow)
+            foreach (Worker worker in ListaPracownikow)
             {
                 var stanowisko = worker.IdRole == 1 ? "Admin" 
                     : (worker.IdRole == 2 ? "Rekruter" 
@@ -73,9 +73,9 @@ namespace Console_EmployeeManagement.DB_Managament
         public void WyswietlPracownika(int id)
         {
             string query = $"SELECT * FROM workers WHERE id_worker = {id}";
-            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
 
-            conn.Open();
+            _conn.Open();
             MySqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.HasRows)
@@ -91,15 +91,15 @@ namespace Console_EmployeeManagement.DB_Managament
                     worker.HireDate = Convert.ToDateTime(reader["hire_date"]);
                     worker.IsWorking = Convert.ToInt16(reader["is_working"]); // tiny int
 
-                    lista_pracownikow.Add(worker); 
+                    ListaPracownikow.Add(worker); 
                 }
 
-                conn.Close();
+                _conn.Close();
 
                 //  Uzywam paczke z NugetPackage - ,,ConsoleTables"
                 var table = new ConsoleTable("Id", "Imie",
                                    "Nazwisko", "Stanowisko");
-                foreach (Worker worker in lista_pracownikow)
+                foreach (Worker worker in ListaPracownikow)
                 {
                     var stanowisko = worker.IdRole == 1 ? "Admin"
                         : (worker.IdRole == 2 ? "Rekruter"
@@ -122,13 +122,13 @@ namespace Console_EmployeeManagement.DB_Managament
         public void WyswietlStanowiska()
         {
             // Wyswietlenie stanowisk + ile osob pracuje na danym stanowisku
-            string query = "SELECT roles.role_name, COUNT(workers.id_role) as ilosc_pracownikow " +
-                "FROM roles " +
-                "LEFT JOIN workers ON roles.id_role = workers.id_role " +
-                "GROUP BY roles.role_name";
-            MySqlCommand cmd = new MySqlCommand(query, conn);
+            string query = "SELECT role.role_name, COUNT(workers.id_role) as ilosc_pracownikow " +
+                "FROM role " +
+                "LEFT JOIN workers ON role.id_role = workers.id_role " +
+                "GROUP BY role.role_name";
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
 
-            conn.Open();
+            _conn.Open();
             MySqlDataReader reader = cmd.ExecuteReader();
 
             while (reader.Read())
@@ -136,7 +136,7 @@ namespace Console_EmployeeManagement.DB_Managament
                 Console.WriteLine(reader["role_name"] + " - " + reader["ilosc_pracownikow"]);
             }
 
-            conn.Close();
+            _conn.Close();
         }
 
         public void DodajPracownika(Worker worker)
@@ -149,18 +149,20 @@ namespace Console_EmployeeManagement.DB_Managament
             worker.Age = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Podaj id stanowiska: ");
             worker.IdRole = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Podaj date zatrudnienia: ");
-            worker.HireDate = Convert.ToDateTime(Console.ReadLine());
-            Console.WriteLine("Czy pracownik jest zatrudniony? (1 - tak, 0 - nie): ");
-            worker.IsWorking = Convert.ToInt16(Console.ReadLine());
+            
+            // data zatrudnienia
+            worker.HireDate = DateTime.Now;
+            string hireDate = worker.HireDate.ToString("yyyy-MM-dd HH:mm:ss");
+            
+            worker.IsWorking = Convert.ToInt16(true);
 
             string query = $"INSERT INTO workers (name, surname, age, id_role, hire_date, is_working) " +
-                $"VALUES ('{worker.Name}', '{worker.Surname}', {worker.Age}, {worker.IdRole}, '{worker.HireDate}', {worker.IsWorking})";
-            MySqlCommand cmd = new MySqlCommand(query, conn);
+                $"VALUES ('{worker.Name}', '{worker.Surname}', {worker.Age}, {worker.IdRole}, '{hireDate}', {worker.IsWorking})";
+            MySqlCommand cmd = new MySqlCommand(query, _conn);
 
-            conn.Open();
+            _conn.Open();
             cmd.ExecuteNonQuery();
-            conn.Close();
+            _conn.Close();
 
             Console.WriteLine("Dodano nowego pracownika.");
         }
